@@ -1,5 +1,5 @@
 [requires]
-dlib/19.1.0@sunxfancy/ci
+dlib/19.1.0@sunxfancy/stable
 
 [options]
 dlib:enable_gif=False

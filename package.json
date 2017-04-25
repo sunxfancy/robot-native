@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "install": "cmake-js compile",
+    "install": "mkdir build && cd build && conan install .. --build missing && cmake-js compile -d ..",
+    "compile": "cd build && cmake-js compile -d ..",
     "test": "export ELECTRON_ENABLE_LOGGING=true && electron main.js"
   },
   "keywords": [
