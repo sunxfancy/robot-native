@@ -1,4 +1,8 @@
+build: false
 environment:
+  PYTHON: "C:\\Python27-x64"
+  PYTHON_VERSION: "2.7.11"
+  PYTHON_ARCH: "64"
   nodejs_version: "7"
 
 platform: 
@@ -7,6 +11,9 @@ platform:
 clone_depth: 3
 
 install:
+  - set PATH=%PYTHON%/Scripts/;%PATH%
+  - pip.exe install conan_package_tools # It install conan too
+  - conan user sunxfancy # It creates the conan data directory
   - ps: Install-Product node $env:nodejs_version
   - npm install
 

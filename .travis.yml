@@ -9,7 +9,10 @@ git:
   depth: 3
 
 install:
-- npm install
+  - bash ./.travis/install.sh
+  - bash ./.travis/run.sh
+  - npm install
+  
 
 notifications:
   email:
