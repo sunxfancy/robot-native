@@ -13,7 +13,7 @@ install:
   - bash ./.travis/run.sh
   - npm install
   
-test_script:
+script:
   - npm --version
 
 notifications:
