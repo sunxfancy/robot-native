@@ -1,0 +1,12 @@
+[requires]
+dlib/19.1.0@sunxfancy/ci
+
+[options]
+dlib:enable_gif=False
+dlib:enable_png=False
+dlib:enable_jpeg=False
+dlib:no_gui_support=True
+
+
+[generators]
+cmake

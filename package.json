@@ -1,0 +1,25 @@
+{
+  "name": "robot-native",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "cmake-js compile",
+    "test": "export ELECTRON_ENABLE_LOGGING=true && electron main.js"
+  },
+  "keywords": [
+    "robot",
+    "native"
+  ],
+  "cmake-js": {
+    "runtime": "electron",
+    "runtimeVersion": "1.6.5",
+    "arch": "x64"
+  },
+  "author": "sxf",
+  "license": "MIT",
+  "devDependencies": {
+    "cmake-js": "^3.4.1",
+    "electron": "1.6.5"
+  }
+}
