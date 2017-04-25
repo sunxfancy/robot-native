@@ -11,7 +11,6 @@ git:
 install:
   - bash ./.travis/install.sh
   - bash ./.travis/run.sh
-  - npm install
   
 script:
   - npm --version
