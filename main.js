@@ -1,4 +1,4 @@
-const addon = require('./build/Release/robot-native');
+const {createFunction} = require('./build/Release/robot-native');
 
-const fn = addon();
+const fn = createFunction();
 console.log(fn());

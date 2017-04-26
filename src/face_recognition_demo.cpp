@@ -77,7 +77,7 @@ std::vector<matrix<rgb_pixel>> jitter_image(
 
 // ----------------------------------------------------------------------------------------
 
-int main(int argc, char** argv) try
+int run_main(int argc, char** argv) 
 {
     if (argc != 2)
     {
@@ -171,10 +171,7 @@ int main(int argc, char** argv) try
     cout << "hit enter to terminate" << endl;
     cin.get();
 }
-catch (std::exception& e)
-{
-    cout << e.what() << endl;
-}
+
 
 // ----------------------------------------------------------------------------------------
 

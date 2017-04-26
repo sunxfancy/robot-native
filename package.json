@@ -6,6 +6,7 @@
   "scripts": {
     "install": "mkdir build && cd build && conan install .. --build missing && cmake-js compile -d ..",
     "compile": "cd build && cmake-js compile -d ..",
+    "dialog": "electron test.js",
     "test": "export ELECTRON_ENABLE_LOGGING=true && electron main.js"
   },
   "keywords": [
