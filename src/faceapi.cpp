@@ -178,6 +178,7 @@ catch (std::exception& e)
 
 // ----------------------------------------------------------------------------------------
 
+
 std::vector<matrix<rgb_pixel>> jitter_image(
     const matrix<rgb_pixel>& img
 )

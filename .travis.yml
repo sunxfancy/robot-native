@@ -5,6 +5,7 @@ os:
 - osx
 dist: trusty
 sudo: true
+osx_image: xcode8.3
 git:
   depth: 3
 
