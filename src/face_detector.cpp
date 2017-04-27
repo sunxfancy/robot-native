@@ -23,10 +23,19 @@ void loadImageData(array2d<rgb_pixel>& img, const Local<Object>& input, Isolate*
     Local<Uint8ClampedArray> v_data = Local<Uint8ClampedArray>::Cast(input->Get(String::NewFromUtf8(isolate, "data")));
     int width  = v_width->NumberValue();
     int height = v_height->NumberValue();
-    unsigned char *data = (unsigned char *)v_data->Buffer()->GetContents().Data();
+    const unsigned char *data = (unsigned char *)v_data->Buffer()->GetContents().Data();
     img.set_size(width, height);
-    
-    std::cout << width << ' ' << height << ' ' << (int)data[0]<< std::endl;
+    for (int i = 0; i< height; ++i) {
+        for (int j = 0; j< width; ++j) {
+            int p = (i*width+j)*4;
+            img[i][j].red = data[p];
+            img[i][j].green = data[p+1];
+            img[i][j].blue = data[p+2];
+            // rgb_pixel(data[p], data[p+1], data[p+2]);
+        }
+    }
+    // pyramid_up(img);
+
 }
 
 /**
@@ -42,9 +51,17 @@ DetectFace(const FunctionCallbackInfo<Value>& args) {
     // load_image(img, argv[i]);
     loadImageData(img, input, isolate);
     std::vector<rectangle> dets = detector(img);
-    
+
     Local<Array> array = Array::New(isolate, dets.size());
-    Local<Object> obj = Object::New(isolate);
+    for (int i=0; i< dets.size(); ++i) {
+        rectangle& rect = dets[i];
+        Local<Object> obj = Object::New(isolate);
+        obj->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, rect.left()));
+        obj->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, rect.top()));
+        obj->Set(String::NewFromUtf8(isolate, "width"), Number::New(isolate, rect.width()));
+        obj->Set(String::NewFromUtf8(isolate, "height"), Number::New(isolate, rect.height()));
+        array->Set(i, obj);
+    }
     args.GetReturnValue().Set(array);
 }
 

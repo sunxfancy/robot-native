@@ -13,27 +13,38 @@
             margin: 0px;
         }
         video, canvas{
-            width: 50%;
-            height: 50%;
+            position: absolute;
         }
+        #canvas {
+            display: none;
+        }
+
         
     </style>
 </head>
 <body>
     <video id="video" autoplay="autoplay" style="background: #ccc;"></video>
     <canvas id="canvas"></canvas>
-
+    <canvas id="show"></canvas>
     <script type="text/javascript">
         const {remote} = require('electron');
         const { createFunction, detectFace } = remote.require('./build/Release/robot-native');
 
         var video = document.getElementById("video");
+        var canvas = document.getElementById("canvas");
+        var show = document.getElementById("show");
+
         var context = canvas.getContext("2d");
+        var ctx = show.getContext("2d");
         // context.imageSmoothingEnabled = false;
         var width, height;
         navigator.webkitGetUserMedia({video: true},
             function(stream) {
                 video.src = URL.createObjectURL(stream);
+                video.addEventListener("loadedmetadata", function () {
+                    show.width = canvas.width = width = video.videoWidth;
+                    show.height = canvas.height = height = video.videoHeight;
+                }, false);
             },
             function() {
                 alert('could not connect stream');
@@ -42,9 +53,16 @@
 
         window.setInterval(function(){
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            console.log(context.getImageData(0, 0, canvas.width, canvas.height));
-            console.log(detectFace(context.getImageData(0, 0, canvas.width, canvas.height)));
-        }, 2000);
+            var faces = detectFace(context.getImageData(0, 0, canvas.width, canvas.height));
+            ctx.clearRect(0, 0, width, height);
+            ctx.strokeStyle = "rgb(50, 255, 50)";
+            console.log("show", show.width, show.height);
+            for (var i = 0; i < faces.length; i++) {
+                console.log("detected face!");
+                console.log(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+                ctx.strokeRect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+            }
+        }, 100);
 
         
         var fn = createFunction();
