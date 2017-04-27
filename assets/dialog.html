@@ -56,10 +56,7 @@
             var faces = detectFace(context.getImageData(0, 0, canvas.width, canvas.height));
             ctx.clearRect(0, 0, width, height);
             ctx.strokeStyle = "rgb(50, 255, 50)";
-            console.log("show", show.width, show.height);
             for (var i = 0; i < faces.length; i++) {
-                console.log("detected face!");
-                console.log(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
                 ctx.strokeRect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
             }
         }, 100);
