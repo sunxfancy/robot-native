@@ -1,7 +1,8 @@
 [requires]
-dlib/19.1.0@sunxfancy/stable
+dlib/19.1.1@sunxfancy/stable
 
 [options]
+dlib:build_PIC=True
 dlib:enable_gif=False
 dlib:enable_png=False
 dlib:enable_jpeg=False

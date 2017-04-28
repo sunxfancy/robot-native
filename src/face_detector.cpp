@@ -8,6 +8,7 @@
  */
 
 #include <dlib/image_processing/frontal_face_detector.h>
+#include <dlib/image_processing/shape_predictor.h>
 #include <node.h>
 #include <vector>
 #include <iostream>
@@ -39,7 +40,7 @@ void loadImageData(array2d<rgb_pixel>& img, const Local<Object>& input, Isolate*
 }
 
 /**
- * detect(face: ImageData): [{x,y,width,height}]
+ * detectFace(face: ImageData): [{x,y,width,height}]
  * ImageData: {width, height, data: uchar[]}
  */
 extern void
@@ -51,6 +52,41 @@ DetectFace(const FunctionCallbackInfo<Value>& args) {
     // load_image(img, argv[i]);
     loadImageData(img, input, isolate);
     std::vector<rectangle> dets = detector(img);
+
+    Local<Array> array = Array::New(isolate, dets.size());
+    for (int i=0; i< dets.size(); ++i) {
+        rectangle& rect = dets[i];
+        Local<Object> obj = Object::New(isolate);
+        obj->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, rect.left()));
+        obj->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, rect.top()));
+        obj->Set(String::NewFromUtf8(isolate, "width"), Number::New(isolate, rect.width()));
+        obj->Set(String::NewFromUtf8(isolate, "height"), Number::New(isolate, rect.height()));
+        array->Set(i, obj);
+    }
+    args.GetReturnValue().Set(array);
+}
+
+/**
+ * detectDetail(face: ImageData): [{x,y,width,height,points:array[68]}]
+ * ImageData: {width, height, data: uchar[]}
+ */
+extern void
+DetectDetail(const FunctionCallbackInfo<Value>& args) {
+    Isolate* isolate = args.GetIsolate();
+    Local<Object> input = args[0]->ToObject();
+    static frontal_face_detector detector = get_frontal_face_detector();
+    array2d<rgb_pixel> img;
+    // load_image(img, argv[i]);
+    loadImageData(img, input, isolate);
+    std::vector<rectangle> dets = detector(img);
+
+    // load 100MB model 
+    static dlib::shape_predictor pose_model;  
+    static bool bFirst = true;
+    if(bFirst) {
+        bFirst = false;
+        deserialize("./assets/shape_predictor_68_face_landmarks.dat") >> pose_model;
+    }
 
     Local<Array> array = Array::New(isolate, dets.size());
     for (int i=0; i< dets.size(); ++i) {

@@ -30,10 +30,12 @@ void CreateFunction(const FunctionCallbackInfo<Value>& args) {
 }
 
 extern void DetectFace(const FunctionCallbackInfo<Value>& args);
+extern void DetectDetail(const FunctionCallbackInfo<Value>& args);
 
 void Init(Local<Object> exports) {
     NODE_SET_METHOD(exports, "createFunction", CreateFunction);
     NODE_SET_METHOD(exports, "detectFace", DetectFace);
+    NODE_SET_METHOD(exports, "detectDetail", DetectFace);
 }
 
 NODE_MODULE(addon, Init)
