@@ -28,7 +28,7 @@
     <canvas id="show"></canvas>
     <script type="text/javascript">
         const {remote} = require('electron');
-        const { createFunction, detectFace } = remote.require('./build/Release/robot-native');
+        const { createFunction, detectFace, detectDetail } = remote.require('./build/Release/robot-native');
 
         var video = document.getElementById("video");
         var canvas = document.getElementById("canvas");
@@ -53,11 +53,19 @@
 
         window.setInterval(function(){
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            var faces = detectFace(context.getImageData(0, 0, canvas.width, canvas.height));
+            var faces = detectDetail(context.getImageData(0, 0, canvas.width, canvas.height));
+            console.log(faces);
             ctx.clearRect(0, 0, width, height);
             ctx.strokeStyle = "rgb(50, 255, 50)";
             for (var i = 0; i < faces.length; i++) {
                 ctx.strokeRect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);
+                for (var j = 0; j < faces[i].points.length; j++) {
+                    var p = faces[i].points[j];
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 1, 0, 2*Math.PI);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
             }
         }, 100);
 

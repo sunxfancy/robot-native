@@ -4,6 +4,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 include_directories(${CMAKE_JS_INC})
+message(STATUS ${CMAKE_JS_INC})
 file(GLOB SOURCE_FILES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES})

@@ -79,13 +79,18 @@ DetectDetail(const FunctionCallbackInfo<Value>& args) {
     // load_image(img, argv[i]);
     loadImageData(img, input, isolate);
     std::vector<rectangle> dets = detector(img);
-
+    if (dets.empty()) {
+        args.GetReturnValue().Set(Array::New(isolate, 0));
+        return;
+    }
     // load 100MB model 
     static dlib::shape_predictor pose_model;  
     static bool bFirst = true;
-    if(bFirst) {
+    if (bFirst) {
+        std::cout << "start loading" << std::endl;
         bFirst = false;
         deserialize("./assets/shape_predictor_68_face_landmarks.dat") >> pose_model;
+        std::cout << "data sets loaded." << std::endl;
     }
 
     Local<Array> array = Array::New(isolate, dets.size());
@@ -96,6 +101,17 @@ DetectDetail(const FunctionCallbackInfo<Value>& args) {
         obj->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, rect.top()));
         obj->Set(String::NewFromUtf8(isolate, "width"), Number::New(isolate, rect.width()));
         obj->Set(String::NewFromUtf8(isolate, "height"), Number::New(isolate, rect.height()));
+
+        full_object_detection points = pose_model(img, rect);
+        Local<Array> parray = Array::New(isolate, points.num_parts());
+        for (unsigned int j=0; j < points.num_parts(); j++) {
+            Local<Object> p = Object::New(isolate);
+            p->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, points.part(j).x()));
+            p->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, points.part(j).y()));
+            parray->Set(j, p);
+        }
+        obj->Set(String::NewFromUtf8(isolate, "points"), parray);
+        
         array->Set(i, obj);
     }
     args.GetReturnValue().Set(array);
